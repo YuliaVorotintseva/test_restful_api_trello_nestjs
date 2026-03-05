@@ -1,14 +1,15 @@
 import { Body, Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "@nestjs/passport";
+import { LogupDTO } from "./logup.dto";
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post('logup')
-    async logup(@Body() body: { email: string, password: string }) {
-        return this.authService.logup(body.email, body.password);
+    async logup(@Body() logupDTO:LogupDTO) {
+        return this.authService.logup(logupDTO.email, logupDTO.password);
     }
 
     @Post('login')
