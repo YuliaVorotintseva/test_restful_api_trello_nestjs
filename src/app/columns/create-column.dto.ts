@@ -1,7 +1,8 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, MaxLength } from "class-validator";
 
-export class CreateColumnDTO{
-    @IsNotEmpty()
+export class CreateColumnDTO {
+    @IsNotEmpty({ message: 'Title is required' })
     @IsString()
-    title:string;
+    @MaxLength(100, { message: 'Title must not exceed 100 characters' })
+    title: string;
 }

@@ -12,22 +12,26 @@ export class CommentsController {
 
     @Post()
     create(@Param('cardId') cardId: string, @Body() createCommentDTO: CreateCommentDTO, @Request() request) {
-        return this.commentsService.create(createCommentDTO, parseInt(cardId), parseInt(request.author.authorId));
+        return this.commentsService.create(createCommentDTO, +cardId, +request.author.authorId);
+    }
+
+    @Get()
+    findAllByCard(@Param('cardId') cardId: string, @Request() request) {
+        return this.commentsService.fineAllByCard(+cardId);
     }
 
     @Get(':id')
-    findOne(@Param('cardId') cardId: string, @Param('id') id: string, @Request() request) {
-        return this.commentsService.findOne(parseInt(id), parseInt(cardId));
+    findOne(@Param('id') id: string, @Request() request) {
+        return this.commentsService.findOne(+id);
     }
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateCommentDTO: UpdateCommentDTO, @Request() request) {
-        return this.commentsService.update(parseInt(id), updateCommentDTO, parseInt(request.author.authorId));
+        return this.commentsService.update(+id, updateCommentDTO, +request.author.authorId);
     }
 
     @Delete(':id')
     remove(@Param('cardId') cardId: string, @Param('id') id: string, @Request() request) {
-        return this.commentsService.remove(parseInt(id), parseInt(cardId));
+        return this.commentsService.remove(+id, +cardId);
     }
-
 }

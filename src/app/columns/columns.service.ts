@@ -4,7 +4,7 @@ import { Repository } from "typeorm";
 
 import { ColumnEntity } from "src/entities/column.entity";
 import { CreateColumnDTO } from "./create-column.dto";
-import { UpdateCommentDTO } from "../comments/update-comment.dto";
+import { UpdateColumnDTO } from "./update-column.dto";
 
 @Injectable()
 export class ColumnService {
@@ -21,9 +21,9 @@ export class ColumnService {
         return this.columnsRepository.save(column);
     }
 
-    async findOne(id: number, ownerId: number) {
+    async findOne(id: number) {
         const column = await this.columnsRepository.findOne({
-            where: { id, ownerId },
+            where: { id },
             relations: ['owner', 'cards']
         });
 
@@ -34,8 +34,15 @@ export class ColumnService {
         return column;
     }
 
-    async update(id: number, updateColumnDTO: UpdateCommentDTO, ownerId: number): Promise<ColumnEntity> {
-        const column = await this.findOne(id, ownerId);
+    async fineAllByOwner(ownerId: number): Promise<ColumnEntity[]> {
+        return this.columnsRepository.find({
+            where: { ownerId },
+            relations: ['cards', 'card.comments']
+        })
+    }
+
+    async update(id: number, updateColumnDTO: UpdateColumnDTO, ownerId: number): Promise<ColumnEntity> {
+        const column = await this.findOne(id);
 
         if (column.ownerId !== ownerId) {
             throw new ForbiddenException('You can only update your own columns');
@@ -46,7 +53,7 @@ export class ColumnService {
     }
 
     async remove(id: number, ownerId: number): Promise<void> {
-        const column = await this.findOne(id, ownerId);
+        const column = await this.findOne(id);
 
         if (column.ownerId !== ownerId) {
             throw new ForbiddenException('You can only delete your own columns');

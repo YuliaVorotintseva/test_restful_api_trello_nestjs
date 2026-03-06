@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { Card } from "src/entities/card.entity";
 import { ColumnEntity } from "src/entities/column.entity";
 import { CreateCardDTO } from "./create-card.dto";
+import { UpdateCardDTO } from "./update-card.dto";
 
 @Injectable()
 export class CardsService {
@@ -30,9 +31,9 @@ export class CardsService {
         return this.cardsRepository.save(card);
     }
 
-    async findOne(id: number, authorId: number): Promise<Card> {
+    async findOne(id: number): Promise<Card> {
         const card = await this.cardsRepository.findOne({
-            where: { id, authorId },
+            where: { id },
             relations: ['author', 'column', 'comments', 'comments.author']
         });
 
@@ -43,8 +44,31 @@ export class CardsService {
         return card;
     }
 
+    async fineAllByColumn(columnId: number): Promise<Card[]> {
+        return this.cardsRepository.find({
+            where: { columnId },
+            relations: ['columns', 'comments']
+        })
+    }
+
+    async update(id: number, updateCardDTO: UpdateCardDTO, authorId: number) {
+        const card = await this.findOne(id);
+
+        if (card.authorId !== authorId) {
+            throw new ForbiddenException('You can only update your own cards');
+        }
+
+        Object.assign(card, updateCardDTO);
+        return this.cardsRepository.save(card);
+    }
+
     async remove(id: number, authorId: number): Promise<void> {
-        const card = await this.findOne(id, authorId);
+        const card = await this.findOne(id);
+
+        if (card.authorId !== authorId) {
+            throw new ForbiddenException('You can only delete your own cards');
+        }
+
         await this.cardsRepository.remove(card);
     }
 }

@@ -31,7 +31,7 @@ export class CommentsService {
         return this.commentsRepository.save(comment);
     }
 
-    async findOne(id: number, authorId: number): Promise<Comment> {
+    async findOne(id: number): Promise<Comment> {
         const comment = await this.commentsRepository.findOne({
             where: { id },
             relations: ['card', 'author']
@@ -43,8 +43,15 @@ export class CommentsService {
         return comment;
     }
 
+    async fineAllByCard(columnId: number): Promise<Card[]> {
+        return this.cardsRepository.find({
+            where: { columnId },
+            relations: ['columns', 'comments']
+        })
+    }
+
     async update(id: number, updateCommentDTO: UpdateCommentDTO, authorId: number): Promise<Comment> {
-        const comment = await this.findOne(id, authorId);
+        const comment = await this.findOne(id);
 
         if (comment.authorId !== authorId) {
             throw new ForbiddenException('You can only update your own comments');
@@ -55,7 +62,7 @@ export class CommentsService {
     }
 
     async remove(id: number, authorId: number): Promise<void> {
-        const comment = await this.findOne(id, authorId);
+        const comment = await this.findOne(id);
 
         if (comment.authorId !== authorId) {
             throw new ForbiddenException('You can only delete your own comments');
