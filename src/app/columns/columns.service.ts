@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -41,24 +41,14 @@ export class ColumnService {
         })
     }
 
-    async update(id: number, updateColumnDTO: UpdateColumnDTO, ownerId: number): Promise<ColumnEntity> {
+    async update(id: number, updateColumnDTO: UpdateColumnDTO): Promise<ColumnEntity> {
         const column = await this.findOne(id);
-
-        if (column.ownerId !== ownerId) {
-            throw new ForbiddenException('You can only update your own columns');
-        }
-
         Object.assign(column, updateColumnDTO);
         return this.columnsRepository.save(column);
     }
 
-    async remove(id: number, ownerId: number): Promise<void> {
+    async remove(id: number): Promise<void> {
         const column = await this.findOne(id);
-
-        if (column.ownerId !== ownerId) {
-            throw new ForbiddenException('You can only delete your own columns');
-        }
-
         await this.columnsRepository.remove(column);
     }
 }

@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -50,24 +50,14 @@ export class CommentsService {
         })
     }
 
-    async update(id: number, updateCommentDTO: UpdateCommentDTO, authorId: number): Promise<Comment> {
+    async update(id: number, updateCommentDTO: UpdateCommentDTO): Promise<Comment> {
         const comment = await this.findOne(id);
-
-        if (comment.authorId !== authorId) {
-            throw new ForbiddenException('You can only update your own comments');
-        }
-
         Object.assign(comment, updateCommentDTO);
         return this.commentsRepository.save(comment);
     }
 
-    async remove(id: number, authorId: number): Promise<void> {
+    async remove(id: number): Promise<void> {
         const comment = await this.findOne(id);
-
-        if (comment.authorId !== authorId) {
-            throw new ForbiddenException('You can only delete your own comments');
-        }
-
         await this.commentsRepository.remove(comment);
     }
 }

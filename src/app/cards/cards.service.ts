@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
@@ -51,24 +51,14 @@ export class CardsService {
         })
     }
 
-    async update(id: number, updateCardDTO: UpdateCardDTO, authorId: number) {
+    async update(id: number, updateCardDTO: UpdateCardDTO) {
         const card = await this.findOne(id);
-
-        if (card.authorId !== authorId) {
-            throw new ForbiddenException('You can only update your own cards');
-        }
-
         Object.assign(card, updateCardDTO);
         return this.cardsRepository.save(card);
     }
 
-    async remove(id: number, authorId: number): Promise<void> {
+    async remove(id: number): Promise<void> {
         const card = await this.findOne(id);
-
-        if (card.authorId !== authorId) {
-            throw new ForbiddenException('You can only delete your own cards');
-        }
-
         await this.cardsRepository.remove(card);
     }
 }

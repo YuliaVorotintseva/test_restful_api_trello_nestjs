@@ -12,6 +12,7 @@ import { Comment } from './entities/comment.entitiy';
 import { ColumnsModule } from './app/columns/columns.module';
 import { CardsModule } from './app/cards/cards.module';
 import { CommentsModule } from './app/comments/comments.module';
+import { CommonModule } from './common.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CommentsModule } from './app/comments/comments.module';
       }),
       inject: [ConfigService]
     }),
+    CommonModule,
     AuthModule,
     UsersModule,
     ColumnsModule,
