@@ -7,7 +7,7 @@ import { ColumnEntity } from "./column.entity";
 import { Card } from "./card.entity";
 import { Comment } from "./comment.entitiy";
 
-@Entity()
+@Entity('Users')
 export class User {
     @PrimaryGeneratedColumn()
     @ApiProperty({ description: 'User\'s identifier', nullable: false })

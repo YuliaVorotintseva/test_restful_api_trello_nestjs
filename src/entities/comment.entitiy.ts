@@ -4,7 +4,7 @@ import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { User } from "./user.entity";
 import { Card } from "./card.entity";
 
-@Entity()
+@Entity('Comments')
 export class Comment {
     @PrimaryGeneratedColumn()
     @ApiProperty({ description: 'Comment identifier', nullable: false })
