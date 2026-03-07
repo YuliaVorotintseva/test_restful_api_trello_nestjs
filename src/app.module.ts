@@ -29,7 +29,8 @@ import { CommonModule } from './common.module';
         username: configService.get('database.username'),
         password: configService.get('database.password'),
         database: configService.get('database.database'),
-        entities: [User, ColumnEntity, Card, Comment]
+        entities: [User, ColumnEntity, Card, Comment],
+        synchronize: true
       }),
       inject: [ConfigService]
     }),
