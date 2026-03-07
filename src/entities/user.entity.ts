@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+
 import { ColumnEntity } from "./column.entity";
 import { Card } from "./card.entity";
 import { Comment } from "./comment.entitiy";
@@ -31,10 +32,16 @@ export class User {
     comments: Comment[];
 
     @Column({ nullable: true })
-    accessToken: string;
+    @Exclude()
+    accessToken: string | null;
 
     @Column({ nullable: true })
-    refreshToken: string;
+    @Exclude()
+    refreshToken: string | null;
+
+    @Column({ nullable: true })
+    @Exclude()
+    refreshTokenExpiration: Date | null;
 
     @CreateDateColumn()
     createdAt: string;

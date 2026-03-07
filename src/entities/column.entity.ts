@@ -11,13 +11,13 @@ export class ColumnEntity {
     @Column()
     title: string;
 
-    @ManyToOne(() => User, user => user.columns)
+    @ManyToOne(() => User, user => user.columns, { onDelete: 'CASCADE' })
     owner: User;
 
     @Column()
     ownerId: number;
 
-    @OneToMany(() => Card, card => card.column)
+    @OneToMany(() => Card, card => card.column, { cascade: true })
     cards: Card[];
 
     @CreateDateColumn()

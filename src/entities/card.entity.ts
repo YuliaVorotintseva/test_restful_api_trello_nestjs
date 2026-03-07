@@ -15,19 +15,19 @@ export class Card {
     @Column({ type: 'text', nullable: true })
     description: string;
 
-    @ManyToOne(() => User, user => user.cards)
+    @ManyToOne(() => User, user => user.cards, { onDelete: 'CASCADE' })
     author: User;
 
     @Column()
     authorId: number;
 
-    @ManyToOne(() => ColumnEntity, column => column.cards)
+    @ManyToOne(() => ColumnEntity, column => column.cards, { onDelete: 'CASCADE' })
     column: ColumnEntity;
 
     @Column()
     columnId: number;
 
-    @OneToMany(() => Comment, comment => comment.card)
+    @OneToMany(() => Comment, comment => comment.card, { cascade: true })
     comments: Comment[];
 
     @CreateDateColumn()

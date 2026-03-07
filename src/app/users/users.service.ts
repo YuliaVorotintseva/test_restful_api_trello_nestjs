@@ -32,7 +32,19 @@ export class UsersService {
         return this.usersRepository.findOne({ where: { id } });
     }
 
-    async updateToken(userId: string, accessToken: string, refreshToken?: string) {
-        await this.usersRepository.update(userId, { accessToken, refreshToken });
+    async updateAccessToken(userId: number, accessToken: string) {
+        await this.usersRepository.update(userId, { accessToken });
+    }
+
+    async updateRefreshToken(userId: number, refreshToken: string, expiresAt: Date) {
+        await this.usersRepository.update(userId, { refreshToken, refreshTokenExpiration: expiresAt });
+    }
+
+    async clearRefreshToken(userId: number) {
+        await this.usersRepository.update(userId, {
+            accessToken: null,
+            refreshToken: null,
+            refreshTokenExpiration: null
+        });
     }
 }

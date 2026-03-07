@@ -2,7 +2,9 @@ export default () => ({
     port: +process.env.PORT!,
     jwt: {
         secret: process.env.JWT_SECRET,
-        expiration: process.env.JWT_EXPIRATION
+        expiration: process.env.JWT_EXPIRATION,
+        refreshSecret: process.env.JWT_REFRESH_SECRET,
+        refreshExpiration: process.env.JWT_REFRESH_EXPIRATION
     },
     database: {
         host: process.env.DB_HOST,
